@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,21 +17,34 @@ Route::get('/', function () {
 });
 
 Route::post('/payment/call_back_function', function () {
-    return json_encode('OK;');
+//    echo 'OK,',
+//    exit();
+    return response()->json('Ok,', 200)->header('Content-Type', 'Shift-JIS');
 });
 
-Route::post('/payment/success', function () {
-    echo 'success';
-});
+Route::get('/payment/success', function () {
+    echo 'Successfully action';
+})->name('success');
 
-Route::post('/payment/cancel', function () {
-    return redirect()->route('cancel');
-});
-
-Route::get('/alert_cancel', function () {
+Route::get('/payment/cancel', function () {
     return view('cancel');
+//    return redirect()->route('cancel');
+});
+
+Route::get('/alert_cancel', function (Request $request) {
+    for($i=1; $i<=10000000; $i++) {
+        if ($i==10000000) {
+            return redirect()->route('error');
+        }
+    }
+//    return redirect()->route('success');
+//    print_r($request->all());exit();
+//    return view('cancel');
 })->name('cancel');
 
-Route::post('/payment/error', function () {
+Route::get('/payment/error', function () {
     echo 'error';
-});
+})->name('error');
+
+Route::get('/event-listener', 'PageController@eventListener');
+Route::post('/event-listener-action', 'PageController@eventListenerAction')->name('event-listener-action');
