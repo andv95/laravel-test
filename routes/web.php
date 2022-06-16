@@ -48,3 +48,8 @@ Route::get('/payment/error', function () {
 
 Route::get('/event-listener', 'PageController@eventListener');
 Route::post('/event-listener-action', 'PageController@eventListenerAction')->name('event-listener-action');
+
+
+Route::get('/async-await', function () {
+    return view('async_await');
+})->name('error');
