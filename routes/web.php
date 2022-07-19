@@ -16,6 +16,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/hello', function () {
+    echo 'hello';
+    exit();
+})->name('hello');
+
 Route::post('/payment/call_back_function', function () {
 //    echo 'OK,',
 //    exit();
@@ -29,7 +34,7 @@ Route::get('/payment/success', function () {
 Route::get('/payment/cancel', function () {
     return view('cancel');
 //    return redirect()->route('cancel');
-});
+})->name('payment_cancel');
 
 Route::get('/alert_cancel', function (Request $request) {
     for($i=1; $i<=10000000; $i++) {
