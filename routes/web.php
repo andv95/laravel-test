@@ -12,8 +12,10 @@ use Illuminate\Http\Request;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', function () {
-    return view('welcome');
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/welcome', function () {
+        return view('welcome');
+    })->name('welcome');
 });
 
 Route::get('/hello', function () {
@@ -58,3 +60,7 @@ Route::post('/event-listener-action', 'PageController@eventListenerAction')->nam
 Route::get('/async-await', function () {
     return view('async_await');
 })->name('error');
+
+Route::get('/','Auth\LoginController@loginPage')->name('login');
+Route::get('/logout','Auth\LoginController@logout')->name('logout');
+Route::post('/login','Auth\LoginController@login')->name("login_action");
