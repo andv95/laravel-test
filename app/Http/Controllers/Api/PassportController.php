@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\ApiLoginRequest;
 use App\Models\UserApi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 //https://www.laravelcode.com/post/laravel-8-api-authentication-using-passport-from-the-scratch
@@ -25,7 +26,7 @@ class PassportController extends ApiBaseController
             'password' => bcrypt($request->password)
         ]);
 
-        $access_token_example = $user->createToken('PassportExample@Section.io')->access_token;
+        $access_token_example = $user->createToken('Api Token')->access_token;
         //return the access token we generated in the above step
         return  $this->successResponse(['token' => $access_token_example], 'Register successfully');
     }
@@ -38,9 +39,18 @@ class PassportController extends ApiBaseController
         ];
         if (auth()->attempt($login_credentials)) {
             //generate the token for the user
-            $user_login_token = auth()->user()->createToken('PassportExample@Section.io')->accessToken;
+            $tokenResult = auth()->user()->createToken('API Token');
+            $user_login_token = $tokenResult->accessToken;
             //now return this token on success login attempt
-            return  $this->successResponse(['token' => $user_login_token], 'Register successfully');
+            if ($request->remember_me) {
+                $user_login_token->expires_at = Carbon::now()->addWeeks(1);
+            }
+
+            return  $this->successResponse([
+                'token' => $user_login_token,
+                'token_type' => 'Bearer',
+                'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString()
+            ], 'Register successfully');
         }
         //wrong login credentials, return, user not authorised to our system, return error code 401
         return  $this->failResponse('UnAuthorised Access');
