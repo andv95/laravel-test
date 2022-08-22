@@ -9,7 +9,6 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Services\SocialAccountService;
 use Illuminate\Support\Facades\Hash;
-use Laravel\Socialite\Contracts\Provider;
 use Socialite;
 use Auth;
 
@@ -28,7 +27,7 @@ class SocialAccountController extends Controller
         return redirect()->route('success');
     }
 
-    private function createOrGetUser(Provider $provider)
+    private function createOrGetUser($provider)
     {
         $providerUser = $provider->user();
         $providerName = class_basename($provider);
