@@ -23,7 +23,8 @@ class SocialAccountService
         } else {
             $account = new SocialAccount([
                 'provider_user_id' => $providerUser->getId(),
-                'provider' => $providerName
+                'provider' => $providerName,
+                'avatar' => $providerUser->getAvatar(),
             ]);
 
             $user = User::whereEmail($providerUser->getEmail())->first();
@@ -32,7 +33,6 @@ class SocialAccountService
                 $user = User::create([
                     'email' => $providerUser->getEmail(),
                     'name' => $providerUser->getName(),
-                    'avatar' => $providerUser->getAvatar(),
                     'password' => Hash::make("123456"),
                 ]);
             }
