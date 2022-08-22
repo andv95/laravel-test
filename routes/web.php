@@ -12,11 +12,7 @@ use Illuminate\Http\Request;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::group(['middleware' => 'auth'], function () {
-    Route::get('/welcome', function () {
-        return view('welcome');
-    })->name('welcome');
-});
+
 
 Route::get('/hello', function () {
     echo 'hello';
@@ -29,9 +25,7 @@ Route::post('/payment/call_back_function', function () {
     return response()->json('Ok,', 200)->header('Content-Type', 'Shift-JIS');
 });
 
-Route::get('/payment/success', function () {
-    echo 'Successfully action';
-})->name('success');
+
 
 Route::get('/payment/cancel', function () {
     return view('cancel');
@@ -61,16 +55,29 @@ Route::get('/async-await', function () {
     return view('async_await');
 })->name('error');
 
-Route::get('/','Auth\LoginController@loginPage')->name('login');
-Route::get('/logout','Auth\LoginController@logout')->name('logout');
-Route::post('/login','Auth\LoginController@login')->name("login_action");
 
-Route::get('login/{social}', [
-    'as' => 'login.social',
-    'uses' => 'SocialAccountController@redirectToProvider',
-]);
+Route::group(['middleware' => 'web'], function () {
+    Route::get('/', 'Auth\LoginController@loginPage')->name('login');
+    Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+    Route::post('/login', 'Auth\LoginController@login')->name("login_action");
 
-Route::get('login/{social}/callback', [
-    'as' => 'login.{social}.callback',
-    'uses' => 'SocialAccountController@handleProviderCallback'
-]);
+    Route::get('login/{social}', [
+        'as' => 'login.social',
+        'uses' => 'SocialAccountController@redirectToProvider',
+    ]);
+
+    Route::get('login/{social}/callback', [
+        'as' => 'login.{social}.callback',
+        'uses' => 'SocialAccountController@handleProviderCallback'
+    ]);
+
+    Route::group(['middleware' => 'auth'], function () {
+        Route::get('/welcome', function () {
+            return view('welcome');
+        })->name('welcome');
+
+        Route::get('/payment/success', function () {
+            echo 'Successfully action';
+        })->name('success');
+    });
+});
