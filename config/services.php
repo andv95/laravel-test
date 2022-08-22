@@ -33,6 +33,12 @@ return [
     'facebook' => [
         'client_id' => '1075476146416368',
         'client_secret' => '61fa0b80455e0007b2a4d9d43c6c3246',
-        'redirect' => 'https://local.laravel/login/facebook/callback',
+        'redirect' => 'https://local.laravel.co/login/facebook/callback',
+    ],
+
+    'google' => [
+        'client_id' => '764181515225-9gcq4mhikn3u0fhacl3irfa16qsiqlj0.apps.googleusercontent.com',
+        'client_secret' => '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',
+        'redirect' => 'https://local.laravel.co/login/google/callback',
     ],
 ];

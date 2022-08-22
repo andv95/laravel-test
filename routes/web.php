@@ -66,8 +66,8 @@ Route::get('/logout','Auth\LoginController@logout')->name('logout');
 Route::post('/login','Auth\LoginController@login')->name("login_action");
 
 Route::get('login/{social}', [
-    'as' => 'login.{social}',
-    'uses' => 'SocialAccountController@redirectToProvider'
+    'as' => 'login.social',
+    'uses' => 'SocialAccountController@redirectToProvider',
 ]);
 
 Route::get('login/{social}/callback', [
