@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use App\Models\SocialAccount;
 use Laravel\Socialite\Contracts\Provider;
+use \Illuminate\Support\Facades\Hash;
 
 class SocialAccountService
 {
@@ -32,6 +33,7 @@ class SocialAccountService
                     'email' => $providerUser->getEmail(),
                     'name' => $providerUser->getName(),
                     'avatar' => $providerUser->getAvatar(),
+                    'password' => Hash::make("123456"),
                 ]);
             }
 

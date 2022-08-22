@@ -31,8 +31,8 @@ return [
     ],
 
     'facebook' => [
-        'client_id' => '476413560612530',
-        'client_secret' => '18587e5f93072dff2a961bf73a51d038',
-        'redirect' => 'http://localhost:8000/callback',
+        'client_id' => '1075476146416368',
+        'client_secret' => '61fa0b80455e0007b2a4d9d43c6c3246',
+        'redirect' => 'https://local.laravel/login/facebook/callback',
     ],
 ];
