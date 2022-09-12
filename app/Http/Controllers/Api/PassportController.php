@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\ApiLoginRequest;
-use App\Models\UserApi;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +13,51 @@ use Illuminate\Support\Facades\Auth;
 
 class PassportController extends ApiBaseController
 {
+    /**
+     * @OA\Post(
+     *     path="/v1/register",
+     *     tags={"user"},
+     *     summary="Add a new user to the store",
+     *     description="Returns a single new user.",
+     *     operationId="createUser",
+     *     @OA\RequestBody(
+     *          description= "User object that needs to be added to the store",
+     *          required=true,
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="name", type="string"),
+     *              @OA\Property(property="email", type="string"),
+     *              @OA\Property(property="password", type="string")
+     *          )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/User"),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Invalid id supplied",
+     *         @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="message",
+     *                  type="string",
+     *                  example="The specified data is invalid."
+     *              ),
+     *              @OA\Property(
+     *                  property="errors",
+     *                  type="object",
+     *                  example={
+     *                      "name": "Name field is required.",
+     *                      "email": "Email field is required.",
+     *                      "password": "Password field is required.",
+     *                  },
+     *              ),
+     *         ),
+     *     ),
+     * )
+     */
     public function register(Request $request)
     {
         $this->validate($request, [
@@ -20,17 +65,65 @@ class PassportController extends ApiBaseController
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8',
         ]);
-        $user = UserApi::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password)
         ]);
 
-        $access_token_example = $user->createToken('Api Token')->access_token;
+        //$access_token_example = $user->createToken('Api Token')->access_token;
         //return the access token we generated in the above step
-        return  $this->successResponse(['token' => $access_token_example], 'Register successfully');
+        return  $this->successResponse(['user' => $user], 'Register successfully');
     }
 
+    /**
+     * @OA\Post(
+     *     path="/v1/login",
+     *     tags={"user"},
+     *     summary="Login admin",
+     *     description="Returns a accesstoken",
+     *     operationId="login",
+     *     @OA\RequestBody(
+     *          description= "Email and password to login",
+     *          required=true,
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="email", type="string"),
+     *              @OA\Property(property="password", type="string")
+     *          )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="token", type="string"),
+     *              @OA\Property(property="token_type", type="string"),
+     *              @OA\Property(property="expires_at", type="date"),
+     *          )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Invalid id supplied",
+     *         @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="message",
+     *                  type="string",
+     *                  example="The given data was valid."
+     *              ),
+     *              @OA\Property(
+     *                  property="errors",
+     *                  type="object",
+     *                  example={
+     *                      "email": "Email is required.",
+     *                      "password": "Password is required.",
+     *                  },
+     *              ),
+     *         ),
+     *     ),
+     * )
+     */
     public function login(ApiLoginRequest $request)
     {
         $login_credentials = [
