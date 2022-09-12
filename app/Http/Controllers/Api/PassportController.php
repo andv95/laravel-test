@@ -150,7 +150,33 @@ class PassportController extends ApiBaseController
     }
 
     /**
-     * This method returns authenticated user details
+     * @OA\Get(
+     *     path="/v1/user",
+     *    tags={"user"},
+     *     summary="Get current user",
+     *     operationId="getCurrentUser",
+     *     description="Returns a current user.",
+     *     security={
+     *           {"bearer_token": {}}
+     *       },
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/User"),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found",
+     *         @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="message",
+     *                  type="string",
+     *                  example="User not found."
+     *              ),
+     *         ),
+     *     ),
+     * )
      */
     public function authenticatedUserDetails()
     {

@@ -64,6 +64,11 @@ class Controller extends BaseController
      *     description="Find out more about Swagger",
      *     url="http://swagger.io"
      * )
+     * @OAS\SecurityScheme(
+     *      securityScheme="bearer_token",
+     *      type="http",
+     *      scheme="bearer"
+     * )
      */
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
