@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendEmailNewUserJob;
+use App\Mail\NewUserEmail;
 use App\Models\SocialAccount;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Services\SocialAccountService;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Socialite;
 use Auth;
@@ -57,6 +60,10 @@ class SocialAccountController extends Controller
 
             $account->user()->associate($user);
             $account->save();
+
+
+            $sendMailNewUserJob = (new SendEmailNewUserJob($user))->delay(Carbon::now()->addMinutes(5));
+            dispatch($sendMailNewUserJob);
 
             return $user;
         }
