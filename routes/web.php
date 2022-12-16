@@ -81,3 +81,11 @@ Route::group(['middleware' => 'web'], function () {
         })->name('success');
     });
 });
+
+Route::get('send-mail', function () {
+    return view('send-mail');
+})->name('send_mail');
+
+Route::post('send-mail', [
+    'uses' => 'PageController@sendMail'
+])->name('post_send_mail');
